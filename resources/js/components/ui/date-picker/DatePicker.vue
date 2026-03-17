@@ -24,11 +24,7 @@ let mediaQuery: MediaQueryList | null = null
 const syncViewportMode = () => {
   isDesktop.value = mediaQuery?.matches ?? false
 }
-
 const numberOfMonths = computed(() => (isDesktop.value ? 2 : 1))
-
-// I will not lie. I directly ripped this from https://reka-ui.com/examples/date-picker-selection
-// and modified it slightly
 const formatter = useDateFormatter('en-UK')
 
 // const selectedRange = ref<DateRange>()
@@ -100,9 +96,9 @@ const quickOptions = [
     label: 'This quarter',
     action: () => {
       const now = today(getLocalTimeZone())
-      const currentMonth = now.month
-      const startMonth = currentMonth - (currentMonth % 3)
-      const startOfQuarter = now.set({ month: startMonth, day: 1 })
+      const quarterStartMonth = Math.floor((now.month - 1) / 3) * 3 + 1
+      const startOfQuarter = now.set({ month: quarterStartMonth, day: 1 })
+
       selectedRange.value = {
         start: startOfQuarter,
         end: now,
@@ -113,23 +109,11 @@ const quickOptions = [
     label: 'Last quarter',
     action: () => {
       const now = today(getLocalTimeZone())
-      const currentMonth = now.month
-      const currentQuarter = Math.floor(currentMonth / 3)
+      const quarterStartMonth = Math.floor((now.month - 1) / 3) * 3 + 1
+      const startOfThisQuarter = now.set({ month: quarterStartMonth, day: 1 })
 
-      // If we're in the first quarter, we need to go back to last year
-      let startOfLastQuarter
-      if (currentQuarter === 0) {
-        startOfLastQuarter = now
-          .subtract({ years: 1 })
-          .set({ month: 10, day: 1 }) // October 1st of previous year
-      }
-      else {
-      // Otherwise, just go back 3 months from the start of current quarter
-        startOfLastQuarter = now
-          .set({ month: currentQuarter * 3 - 2, day: 1 })
-      }
-
-      const endOfLastQuarter = startOfLastQuarter.add({ months: 3 }).subtract({ days: 1 })
+      const startOfLastQuarter = startOfThisQuarter.subtract({ months: 3 })
+      const endOfLastQuarter = startOfThisQuarter.subtract({ days: 1 })
 
       selectedRange.value = {
         start: startOfLastQuarter,
@@ -261,7 +245,7 @@ onBeforeUnmount(() => {
                   <RangeCalendarHeadCell
                     v-for="day in weekDays"
                     :key="day"
-                    class="rounded-md text-xs text-green8"
+                    class="rounded-md text-xs text-green-500"
                   >
                     {{ day }}
                   </RangeCalendarHeadCell>

@@ -23,9 +23,11 @@ export async function fetchMetric<T>(
 ): Promise<T> {
     const response = await fetch(url, {
         method: method,
+        headers: {
+            Accept: 'application/json',
+        },
     });
 
-    // given more time, i'd probably expand the error logging to include the failing url / status code as well.
     if (!response.ok) {
         throw new Error(response.statusText);
     }

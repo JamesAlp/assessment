@@ -34,13 +34,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// given more time I would evaluate the idea of combining this state in some maner
-// such as combining the data and loading status for each metric together
-// or storing all state in larger overall state store that I would populate dynamically
-// from the 4 predefined metrics that are used. However given that this is a take-home
-// assessment and that there are only 4 predefined metrics to consider, I believe this
-// is fine.
-
 /**
  * Overall sales data for the current month.
  */
@@ -121,9 +114,6 @@ const loadActiveAccounts = async () => {
 
 /**
  * Loads daily sales, default by 30 days period.'
- *
- * Given more time I'd look for a way to cache data through a store to avoid duplicate API calls.
- * I'd also add debouncing to avoid spamming API calls and use AbortController to avoid race conditions.
  */
 const loadDailySales = async (dateRange?: DateRange) => {
     try {
@@ -226,13 +216,20 @@ onMounted(() => {
                 description="Sales per day."
             >
                 <template #header>
-                    <!-- Given more time I'd look into this whole settings modal / dropdown menu area and clean it up. For now I am just demonstrating the idea. -->
                     <CardAction>
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
-                                <Settings class="h-4 w-4" />
+                                <button
+                                    type="button"
+                                    aria-label="Chart settings"
+                                    class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md hover:bg-accent"
+                                >
+                                    <Settings class="h-4 w-4" />
+                                </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent class="h-102 w-145">
+                            <DropdownMenuContent
+                                class="max-h-[80vh] max-w-[50vw] overflow-auto"
+                            >
                                 <DatePicker
                                     v-model:selected-range="
                                         dailySalesSelectedRange

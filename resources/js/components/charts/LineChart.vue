@@ -84,10 +84,6 @@ const chartOptions = computed<ApexOptions>(() => {
         plotOptions: {
             line: {
                 colors: {
-                    // given more time i'd try to find a way to make any
-                    // upward line green and any downward line red
-                    // but i believe for now a threshold value gets the
-                    // idea across
                     threshold: 8000,
                     colorAboveThreshold: '#00c951',
                     colorBelowThreshold: '#ff0000',
