@@ -62,13 +62,6 @@ const dailySalesSelectedRange = ref<DateRange>({
     start: todaysDate.subtract({ days: 29 }),
     end: todaysDate,
 });
-// watch(dailySalesSelectedRange, (range) => {
-//     if (range?.start && range?.end) {
-//         dailySalesSelectedRange.value.start = range.start;
-//         dailySalesSelectedRange.value.end = range.end;
-//         loadDailySales();
-//     }
-// });
 
 /**
  * Loads monthly sales.
@@ -161,9 +154,8 @@ watch(
 
         const controller = new AbortController();
         loadDailySales(controller.signal);
-        onCleanup(() => controller.abort);
+        onCleanup(() => controller.abort());
     },
-    { immediate: true },
 );
 
 /**
