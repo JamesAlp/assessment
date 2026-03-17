@@ -57,12 +57,18 @@ const activeAccountsLoadingStatus = ref<MetricLoadingState>('Loading');
  */
 const dailySalesData = ref<DailySales>();
 const dailySalesLoadingStatus = ref<MetricLoadingState>('Loading');
-const dailySalesSelectedRange = ref<DateRange>();
-watch(dailySalesSelectedRange, (range) => {
-    if (range?.start && range?.end) {
-        loadDailySales(range);
-    }
+const todaysDate = today(getLocalTimeZone());
+const dailySalesSelectedRange = ref<DateRange>({
+    start: todaysDate.subtract({ days: 29 }),
+    end: todaysDate,
 });
+// watch(dailySalesSelectedRange, (range) => {
+//     if (range?.start && range?.end) {
+//         dailySalesSelectedRange.value.start = range.start;
+//         dailySalesSelectedRange.value.end = range.end;
+//         loadDailySales();
+//     }
+// });
 
 /**
  * Loads monthly sales.
@@ -115,36 +121,50 @@ const loadActiveAccounts = async () => {
 /**
  * Loads daily sales, default by 30 days period.'
  */
-const loadDailySales = async (dateRange?: DateRange) => {
+const loadDailySales = async (signal?: AbortSignal) => {
     try {
-        const todaysDate = today(getLocalTimeZone());
-        const range: DateRange = {
-            start: todaysDate.subtract({ days: 30 }),
-            end: todaysDate,
-        };
-
-        if (dateRange && dateRange.start && dateRange.end) {
-            range.start = dateRange.start;
-            range.end = dateRange.end;
-        }
-
         dailySalesData.value = await fetchMetric<DailySales>(
             MetricsController.dailySales.url({
                 query: {
-                    ...(range.start
-                        ? { start_date: range.start.toString() }
+                    ...(dailySalesSelectedRange.value.start
+                        ? {
+                              start_date:
+                                  dailySalesSelectedRange.value.start.toString(),
+                          }
                         : {}),
-                    ...(range.end ? { end_date: range.end.toString() } : {}),
+                    ...(dailySalesSelectedRange.value.end
+                        ? {
+                              end_date:
+                                  dailySalesSelectedRange.value.end.toString(),
+                          }
+                        : {}),
                 },
             }),
             'GET',
+            signal,
         );
         dailySalesLoadingStatus.value = 'Success';
     } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         dailySalesLoadingStatus.value = 'Failure';
         console.error(`Failed to load daily sales`, err);
     }
 };
+
+watch(
+    () => [
+        dailySalesSelectedRange.value.start?.toString(),
+        dailySalesSelectedRange.value.end?.toString(),
+    ],
+    ([start, end], old, onCleanup) => {
+        if (!start || !end) return;
+
+        const controller = new AbortController();
+        loadDailySales(controller.signal);
+        onCleanup(() => controller.abort);
+    },
+    { immediate: true },
+);
 
 /**
  * Get each metric async.
@@ -228,7 +248,7 @@ onMounted(() => {
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                class="max-h-[80vh] max-w-[50vw] overflow-auto"
+                                class="max-h-[80vh] max-w-[90vw] overflow-auto"
                             >
                                 <DatePicker
                                     v-model:selected-range="

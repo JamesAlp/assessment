@@ -3,11 +3,11 @@ interface KeyValuePair {
     value: number;
 }
 
-export interface MonthlySales extends KeyValuePair {}
+export type MonthlySales = KeyValuePair;
 
-export interface OpenDeals extends KeyValuePair {}
+export type OpenDeals = KeyValuePair;
 
-export interface ActiveAccounts extends KeyValuePair {}
+export type ActiveAccounts = KeyValuePair;
 
 export interface DailySales {
     label: string;

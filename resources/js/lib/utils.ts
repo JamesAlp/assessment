@@ -20,9 +20,11 @@ export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
 export async function fetchMetric<T>(
     url: string,
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    signal?: AbortSignal,
 ): Promise<T> {
     const response = await fetch(url, {
         method: method,
+        signal,
         headers: {
             Accept: 'application/json',
         },

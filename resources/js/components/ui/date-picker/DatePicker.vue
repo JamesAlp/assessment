@@ -167,13 +167,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col rounded-xl border bg-white shadow-sm lg:flex-row">
-    <div class="border-gray-100 p-3 sm:p-4 lg:w-40 lg:border-r">
+  <div class="flex flex-col rounded-xl border border-border bg-card text-card-foreground shadow-sm lg:flex-row">
+    <div class="border-border p-3 sm:p-4 lg:w-40 lg:border-r">
       <div class="flex gap-2 overflow-x-auto lg:block lg:space-y-1">
         <button
           v-for="option in quickOptions"
           :key="option.label"
-          class="shrink-0 whitespace-nowrap rounded-md bg-transparent px-3 py-2 text-[13px] transition hover:bg-gray-100 lg:w-full lg:text-left"
+          class="shrink-0 whitespace-nowrap rounded-md bg-transparent px-3 py-2 text-[13px] text-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full lg:text-left"
           @click="option.action"
         >
           {{ option.label }}
@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
             class="flex items-center"
           >
             <RangeCalendarPrev
-              class="inline-flex items-center cursor-pointer text-black justify-center rounded-md bg-transparent w-7 h-7 hover:bg-stone-50 active:scale-98 active:transition-all focus:shadow-[0_0_0_2px] focus:shadow-black"
+              class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md bg-transparent text-foreground hover:bg-accent active:scale-98 active:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Icon
                 icon="radix-icons:chevron-left"
@@ -209,7 +209,7 @@ onBeforeUnmount(() => {
             <span class="font-semibold flex-1 text-center">{{ formatter.custom(month.value.toDate(getLocalTimeZone()), { month: 'long', year: 'numeric' }) }}</span>
             <RangeCalendarNext
               v-if="grid.length === 1"
-              class="inline-flex items-center cursor-pointer justify-center text-black rounded-md bg-transparent w-7 h-7 hover:bg-stone-50 active:scale-98 active:transition-all focus:shadow-[0_0_0_2px] focus:shadow-black"
+              class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md bg-transparent text-foreground hover:bg-accent active:scale-98 active:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Icon
                 icon="radix-icons:chevron-right"
@@ -228,7 +228,7 @@ onBeforeUnmount(() => {
             <span class="w-7" />
             <span class="font-semibold flex-1 text-center">{{ formatter.custom(month.value.toDate(getLocalTimeZone()), { month: 'long', year: 'numeric' }) }}</span>
             <RangeCalendarNext
-              class="place-self-end inline-flex items-center cursor-pointer justify-center text-black rounded-md bg-transparent w-7 h-7 hover:bg-stone-50 active:scale-98 active:transition-all focus:shadow-[0_0_0_2px] focus:shadow-black"
+              class="place-self-end inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md bg-transparent text-foreground hover:bg-accent active:scale-98 active:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Icon
                 icon="radix-icons:chevron-right"
@@ -245,7 +245,7 @@ onBeforeUnmount(() => {
                   <RangeCalendarHeadCell
                     v-for="day in weekDays"
                     :key="day"
-                    class="rounded-md text-xs text-green-500"
+                    class="rounded-md text-xs text-muted-foreground"
                   >
                     {{ day }}
                   </RangeCalendarHeadCell>
@@ -263,13 +263,13 @@ onBeforeUnmount(() => {
                     :date="weekDate"
                     class="aspect-square lg:w-[34px] my-0.5 p-0 first:[&:has([data-selected])]:rounded-l-full last:[&:has([data-selected])]:rounded-r-full [&:has([data-selected][data-selection-end])]:rounded-r-full [&:not(:has([data-highlighted])):has([data-selected][data-selection-start])]:rounded-l-full
                  first:[&:has([data-highlighted])]:rounded-l-full last:[&:has([data-highlighted])]:rounded-r-full [&:has([data-highlighted-end])]:rounded-r-full [&:has([data-highlighted-start])]:rounded-l-full
-                  [&:has([data-selected])]:bg-green-100 [&:has([data-highlighted])]:bg-green-100
+                  [&:has([data-selected])]:bg-green-100 dark:[&:has([data-selected])]:bg-green-900/45 [&:has([data-highlighted])]:bg-green-100 dark:[&:has([data-highlighted])]:bg-green-900/35
                 "
                   >
                     <RangeCalendarCellTrigger
                       :day="weekDate"
                       :month="month.value"
-                      class="relative flex items-center rounded-full justify-center whitespace-nowrap text-sm font-normal w-full h-full text-black outline-none focus:shadow-[0_0_0_2px] transition duration-100 focus:shadow-black hover:bg-green-600 hover:text-white data-[selection-start]:bg-green-600 data-[selection-end]:bg-green-600 data-[selection-start]:text-white data-[selection-end]:text-white data-[highlighted-start]:bg-green-600 data-[highlighted-start]:text-white data-[highlighted-end]:bg-green-600 data-[highlighted-end]:text-white data-[unavailable]:pointer-events-none data-[unavailable]:text-black/30 data-[unavailable]:line-through before:absolute before:bottom-[3px] before:hidden before:rounded-full before:w-1 before:h-1 before:bg-white data-[today]:before:block data-[today]:before:bg-green-700 data-[outside-month]:opacity-25"
+                      class="relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full text-sm font-normal text-foreground outline-none transition duration-100 hover:bg-green-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[selection-start]:bg-green-600 data-[selection-end]:bg-green-600 data-[selection-start]:text-white data-[selection-end]:text-white dark:data-[selection-start]:bg-green-500 dark:data-[selection-end]:bg-green-500 data-[highlighted-start]:bg-green-600 data-[highlighted-start]:text-white data-[highlighted-end]:bg-green-600 data-[highlighted-end]:text-white dark:data-[highlighted-start]:bg-green-500 dark:data-[highlighted-end]:bg-green-500 data-[unavailable]:pointer-events-none data-[unavailable]:text-muted-foreground/40 data-[unavailable]:line-through before:absolute before:bottom-[3px] before:hidden before:h-1 before:w-1 before:rounded-full before:bg-white data-[today]:before:block data-[today]:before:bg-green-700 dark:data-[today]:before:bg-green-400 data-[outside-month]:opacity-25"
                     />
                   </RangeCalendarCell>
                 </RangeCalendarGridRow>
@@ -283,9 +283,9 @@ onBeforeUnmount(() => {
         v-slot="{ segments }"
         v-model="selectedRange"
         locale="en-UK"
-        class="flex flex-wrap items-center gap-2 border-t border-gray-100 p-3 select-none sm:flex-nowrap sm:gap-0 sm:p-4"
+        class="flex flex-wrap items-center gap-2 border-t border-border p-3 select-none sm:flex-nowrap sm:gap-0 sm:p-4"
       >
-        <div class="flex items-center border rounded-md p-1 shadow-sm [[data-invalid]_&]:border-red-500">
+        <div class="flex items-center rounded-md border border-input bg-background p-1 shadow-sm [[data-invalid]_&]:border-red-500">
           <template
             v-for="item in segments.start"
             :key="item.part"
@@ -300,7 +300,7 @@ onBeforeUnmount(() => {
             <DateRangeFieldInput
               v-else
               :part="item.part"
-              class="text-center rounded p-0.5 whitespace-nowrap focus:outline-none focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-green-600"
+              class="whitespace-nowrap rounded p-0.5 text-center text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[placeholder]:text-muted-foreground"
               :class="[item.part === 'year' ? 'w-12' : 'w-8']"
               type="start"
             >
@@ -311,7 +311,7 @@ onBeforeUnmount(() => {
 
         <span class="mx-2">-</span>
 
-        <div class="flex items-center border rounded-md p-1 shadow-sm [[data-invalid]_&]:border-red-500">
+        <div class="flex items-center rounded-md border border-input bg-background p-1 shadow-sm [[data-invalid]_&]:border-red-500">
           <template
             v-for="item in segments.end"
             :key="item.part"
@@ -326,7 +326,7 @@ onBeforeUnmount(() => {
             <DateRangeFieldInput
               v-else
               :part="item.part"
-              class="text-center rounded p-0.5 whitespace-nowrap focus:outline-none focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-green-600"
+              class="whitespace-nowrap rounded p-0.5 text-center text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[placeholder]:text-muted-foreground"
               :class="[item.part === 'year' ? 'w-12' : 'w-8']"
               type="end"
             >
