@@ -62,6 +62,7 @@ const dailySalesSelectedRange = ref<DateRange>({
     start: todaysDate.subtract({ days: 29 }),
     end: todaysDate,
 });
+const dailySalesDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 /**
  * Loads monthly sales.
@@ -153,8 +154,22 @@ watch(
         if (!start || !end) return;
 
         const controller = new AbortController();
-        loadDailySales(controller.signal);
-        onCleanup(() => controller.abort());
+
+        if (dailySalesDebounceTimer.value) {
+            clearTimeout(dailySalesDebounceTimer.value);
+        }
+
+        dailySalesDebounceTimer.value = setTimeout(() => {
+            loadDailySales(controller.signal);
+        }, 300);
+
+        onCleanup(() => {
+            if (dailySalesDebounceTimer.value) {
+                clearTimeout(dailySalesDebounceTimer.value);
+                dailySalesDebounceTimer.value = null;
+            }
+            controller.abort();
+        });
     },
 );
 
