@@ -16,5 +16,3 @@ Route::get('dashboard', function () {
 
 require __DIR__.'/settings.php';
 
-// Register API routes with the default API middleware and /api prefix
-Route::middleware('api')->prefix('api')->group(base_path('routes/api.php'));

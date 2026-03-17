@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class MetricsController extends Controller
 {
@@ -30,16 +31,30 @@ class MetricsController extends Controller
         ]);
     }
 
-    public function dailySales(): JsonResponse
+    public function dailySales(Request $request): JsonResponse
     {
+        $validated = $request->validate([
+            'start_date' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:end_date'],
+            'end_date' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:start_date'],
+        ]);
+
+        $end = isset($validated['end_date'])
+            ? now()->parse($validated['end_date'])
+            : now();
+
+        $start = isset($validated['start_date'])
+            ? now()->parse($validated['start_date'])
+            : $end->copy()->subDays(29);
+
         $data = [];
-        $sub30Days = now()->subDays(30);
-        for ($pastDate = $sub30Days->clone(); $pastDate->lte(now()); $pastDate->addDay()) {
-            $data[$pastDate->toDateString()] = rand(4000, 15000);
+        for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+            $data[$d->toDateString()] = rand(4000, 15000);
         }
+
         return response()->json([
-            'label' => 'Daily Sales (last 30 days)',
+            'label' => 'Daily Sales',
             'values' => $data,
         ]);
+
     }
 }
